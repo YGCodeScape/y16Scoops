@@ -12,17 +12,6 @@ import vanillaFlavour from './assets/vanillaFlavour.png'
 const flavors = [
   {
     id: 0,
-    name: 'Vanilla Bean',
-    description:
-      'Pure Madagascar vanilla beans slow-steeped in cream. A timeless classic with warm, floral undertones and a silky, dreamy finish.',
-    image: vanillaFlavour,
-    bgColor: '#faf6f6',
-    discColor: '#F3E9C6',
-    discStroke: '#D4C07A',
-    textColor: '#7B2D5A',
-  },
-  {
-    id: 1,
     name: 'Mango Tango',
     description:
       'Sun-ripened Alphonso mangoes churned into every scoop. Bursting with tropical sweetness and a vibrant golden glow.',
@@ -33,7 +22,7 @@ const flavors = [
     textColor: '#e85d04',
   },
   {
-    id: 2,
+    id: 1,
     name: 'Chocolate Crème',
     description:
       'Rich Belgian dark chocolate folded into thick, velvety cream. Deep, indulgent and utterly irresistible.',
@@ -44,10 +33,10 @@ const flavors = [
     textColor: '#3B1A0A',
   },
   {
-    id: 3,
+    id: 2,
     name: 'Strawberry Fields',
     description:
-      'Fresh-picked strawberries swirled into every bite. Bright, fruity and perfectly pink summer in a scoop.',
+    'Fresh-picked strawberries swirled into every bite. Bright, fruity and perfectly pink summer in a scoop.',
     image: strawberryFlavour,
     bgColor: '#f9d6df',
     discColor: '#F4829A',
@@ -55,15 +44,26 @@ const flavors = [
     textColor: '#7B1A35',
   },
   {
-    id: 4,
+    id: 3,
     name: 'Pistachio Bliss',
     description:
       'Roasted Sicilian pistachios ground into a lush green cream. Nutty, smooth and elegantly sophisticated.',
-    image: pistaFlavor,
-    bgColor: '#d8ecd0',
-    discColor: '#8DB87A',
-    discStroke: '#4A7A36',
+      image: pistaFlavor,
+      bgColor: '#d8ecd0',
+      discColor: '#8DB87A',
+      discStroke: '#4A7A36',
     textColor: '#2A4D1A',
+  },
+  {
+    id: 4,
+    name: 'Vanilla Bean',
+    description:
+      'Pure Madagascar vanilla beans slow-steeped in cream. A timeless classic with warm, floral undertones and a silky, dreamy finish.',
+    image: vanillaFlavour,
+    bgColor: '#faf6f6',
+    discColor: '#F3E9C6',
+    discStroke: '#D4C07A',
+    textColor: '#7B2D5A',
   },
 ]
 
@@ -338,15 +338,8 @@ export default function App() {
         transition: 'background-color 0.8s ease',
       }}
       onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-    >
-      {/* ── Landing panel — slides UP when transitioning to next section ── */}
-      <motion.div
-        className="absolute inset-0 z-10 flex flex-col"
-        animate={{ y: showNextSection ? '-100%' : '0%' }}
-        transition={{ type: 'spring', stiffness: 140, damping: 26, mass: 0.9 }}
-      >
-
+      onTouchEnd={handleTouchEnd} >
+      
         {/* ══════════════════════════════════
             HEADER (Top on all devices)
         ══════════════════════════════════ */}
@@ -390,6 +383,11 @@ export default function App() {
             ))}
           </div>
         </header>
+      {/* ── Landing panel — slides UP when transitioning to next section ── */}
+      <motion.div className="absolute inset-0 z-10 flex flex-col"
+        animate={{ y: showNextSection ? '-100%' : '0%' }}
+        transition={{ type: 'spring', stiffness: 140, damping: 26, mass: 0.9 }}
+      >
 
         {/* ══════════════════════════════════
             MAIN CONTENT AREA
@@ -397,7 +395,6 @@ export default function App() {
             Desktop: 3-column Layout (Left Info | Center Tubs | Right Brand & Discs)
         ══════════════════════════════════ */}
         <main className="app-main">
-
           {/* ── 1. FLAVOUR TITLE, DESCRIPTION & CTA (Top on mobile, Left on desktop) ── */}
           <div className="flavor-info-column">
             {/* Flavor name */}
@@ -518,12 +515,8 @@ export default function App() {
       </motion.div>
 
       {/* ── NEXT SECTION — slides in from below as landing slides out ── */}
-      <motion.div className="absolute inset-0 flex flex-col items-center justify-center p-6"
-        style={{
-          zIndex: 20,
-          backgroundColor: '#fdf6ec',
-          pointerEvents: showNextSection ? 'auto' : 'none',
-        }}
+      <motion.div className="absolute inset-0 flex flex-col items-center justify-center"
+        style={{ zIndex: 20, backgroundColor:'#faf6f6' }}
         animate={{ y: showNextSection ? '0%' : '100%' }}
         transition={{ type: 'spring', stiffness: 140, damping: 26, mass: 0.9 }}
       >
@@ -532,7 +525,7 @@ export default function App() {
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: showNextSection ? 1 : 0.8, opacity: showNextSection ? 1 : 0 }}
             transition={{ delay: 0.15, duration: 0.4 }}
-            className="text-6xl md:text-8xl mb-2"
+            className="text-6xl md:text-8xl "
           >
             🍦
           </motion.div>
@@ -561,7 +554,6 @@ export default function App() {
           </motion.button>
         </div>
       </motion.div>
-
     </div>
   )
 }
