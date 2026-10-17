@@ -555,7 +555,7 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 16 }}
               transition={{ duration: 0.35 }}
-              className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 pointer-events-auto"
+              className="discover-chip absolute bottom-4 left-1/2 -translate-x-1/2 z-30 pointer-events-auto"
             >
               <button
                 onClick={() => setShowNextSection(true)}

@@ -463,6 +463,9 @@ html::selection{
   .promo-mobile-masonry {
     display: flex !important;
   }
+  .discover-chip {
+    bottom: 120px;
+  }
 }
 
 @media screen and (min-width: 769px) {

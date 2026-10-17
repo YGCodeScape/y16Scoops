@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import banner1 from '../assets/banners/banner1.png'
 import banner2 from '../assets/banners/banner2.png'
@@ -83,8 +83,7 @@ export default function PromoSection({ isActive }) {
     >
 
       {/* ── DESKTOP & TABLET MASONRY LAYOUT ── */}
-      <motion.div
-        className="promo-desktop-masonry hidden md:flex w-full h-full max-w-[1720px] mx-auto gap-3 lg:gap-3.5 box-border"
+      <motion.div className="promo-desktop-masonry hidden md:flex w-full h-full max-w-[1720px] mx-auto gap-3 lg:gap-3.5 box-border"
         variants={containerVariants}
         initial="hidden"
         animate={isActive ? 'visible' : 'hidden'}
