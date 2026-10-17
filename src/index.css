@@ -432,3 +432,44 @@ html::selection{
     gap: 0.65rem;
   }
 }
+
+/* ─────────────────────────────────────────────
+   PROMO SECTION (Masonry / Bento Banners)
+───────────────────────────────────────────── */
+.promo-section-container {
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  background: #faf6f6;
+}
+
+/* Custom scrollbar for mobile promo section */
+.promo-mobile-masonry::-webkit-scrollbar {
+  width: 4px;
+}
+.promo-mobile-masonry::-webkit-scrollbar-track {
+  background: transparent;
+}
+.promo-mobile-masonry::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 9999px;
+}
+
+/* Media query to switch between desktop flex masonry and mobile scrollable bento */
+@media screen and (max-width: 768px) {
+  .promo-desktop-masonry {
+    display: none !important;
+  }
+  .promo-mobile-masonry {
+    display: flex !important;
+  }
+}
+
+@media screen and (min-width: 769px) {
+  .promo-desktop-masonry {
+    display: flex !important;
+  }
+  .promo-mobile-masonry {
+    display: none !important;
+  }
+}

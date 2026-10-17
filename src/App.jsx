@@ -5,6 +5,7 @@ import mangoFlavour from './assets/mangoFlavour.png'
 import pistaFlavor from './assets/pistaFlavor.png'
 import strawberryFlavour from './assets/strawberryFlavour.png'
 import vanillaFlavour from './assets/vanillaFlavour.png'
+import PromoSection from './components/PromoSection.jsx'
 
 /* ─────────────────────────────────────────────
    FLAVOR DATA
@@ -251,6 +252,15 @@ export default function App() {
 
       if (isTransitioningRef.current) return
 
+      // If user is inside promo section on mobile / scrollable view, allow natural scrolling
+      if (showNextSection) {
+        const mobileEl = document.querySelector('.promo-mobile-masonry')
+        if (mobileEl && mobileEl.scrollHeight > mobileEl.clientHeight) {
+          if (e.deltaY > 0) return
+          if (e.deltaY < 0 && mobileEl.scrollTop > 15) return
+        }
+      }
+
       // Sensitive threshold (35px) for immediate, non-laggy response
       if (Math.abs(accumulatedDelta) >= 35) {
         if (accumulatedDelta > 0) {
@@ -309,6 +319,22 @@ export default function App() {
 
     const SWIPE_THRESHOLD = 35
 
+    // If inside promo section, allow natural touch scrolling
+    if (showNextSection) {
+      const mobileEl = document.querySelector('.promo-mobile-masonry')
+      if (mobileEl && mobileEl.scrollTop > 15 && diffY < 0) {
+        touchStartX.current = null
+        touchStartY.current = null
+        return
+      }
+      if (diffY < -55) {
+        goToPrev() // swipe down at top returns to hero
+      }
+      touchStartX.current = null
+      touchStartY.current = null
+      return
+    }
+
     if (Math.abs(diffX) > Math.abs(diffY)) {
       if (Math.abs(diffX) > SWIPE_THRESHOLD) {
         if (diffX > 0) {
@@ -334,7 +360,7 @@ export default function App() {
   return (
     <div className="app-container"
       style={{
-        backgroundColor: showNextSection ? '#fdf6ec' : activeFlavor.bgColor,
+        backgroundColor: showNextSection ? '#d9d9d9' : activeFlavor.bgColor,
         transition: 'background-color 0.8s ease',
       }}
       onTouchStart={handleTouchStart}
@@ -343,7 +369,15 @@ export default function App() {
         {/* ══════════════════════════════════
             HEADER (Top on all devices)
         ══════════════════════════════════ */}
-        <header className="app-header">
+        <motion.header
+          className="app-header"
+          animate={{
+            opacity: showNextSection ? 0 : 1,
+            y: showNextSection ? -45 : 0,
+          }}
+          transition={{ duration: 0.35, ease: 'easeInOut' }}
+          style={{ pointerEvents: showNextSection ? 'none' : 'auto' }}
+        >
           {/* Wordmark */}
           <div>
             <motion.div
@@ -382,7 +416,7 @@ export default function App() {
               </motion.a>
             ))}
           </div>
-        </header>
+        </motion.header>
       {/* ── Landing panel — slides UP when transitioning to next section ── */}
       <motion.div className="absolute inset-0 z-10 flex flex-col"
         animate={{ y: showNextSection ? '-100%' : '0%' }}
@@ -512,47 +546,43 @@ export default function App() {
             </div>
           </div>
         </main>
+
+        {/* ── Scroll / Click indicator to discover promotions when on last flavor ── */}
+        <AnimatePresence>
+          {activeIndex === flavors.length - 1 && !showNextSection && (
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 16 }}
+              transition={{ duration: 0.35 }}
+              className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 pointer-events-auto"
+            >
+              <button
+                onClick={() => setShowNextSection(true)}
+                className="flex items-center gap-2 rounded-full bg-white/85 hover:bg-white text-stone-800 text-[9px] font-bold uppercase tracking-wider shadow-md backdrop-blur-md transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer border border-white/70"
+                style={{paddingInline: '16px', paddingBlock: '6px' }}
+              >
+                <span>Discover Promotions</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-3.5 h-3.5 animate-bounce">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
 
-      {/* ── NEXT SECTION — slides in from below as landing slides out ── */}
-      <motion.div className="absolute inset-0 flex flex-col items-center justify-center"
-        style={{ zIndex: 20, backgroundColor:'#faf6f6' }}
+      {/* ── NEXT SECTION (PROMOTIONAL BANNERS & VIDEO MASONRY) ── */}
+      <motion.div
+        className="absolute inset-0 flex flex-col"
+        style={{ zIndex: 20, backgroundColor: '#d9d9d9' }}
         animate={{ y: showNextSection ? '0%' : '100%' }}
         transition={{ type: 'spring', stiffness: 140, damping: 26, mass: 0.9 }}
       >
-        <div className="text-center select-none max-w-md mx-auto" style={{ color: '#7B4A1A' }}>
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: showNextSection ? 1 : 0.8, opacity: showNextSection ? 1 : 0 }}
-            transition={{ delay: 0.15, duration: 0.4 }}
-            className="text-6xl md:text-8xl "
-          >
-            🍦
-          </motion.div>
-          <motion.h2
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: showNextSection ? 0 : 20, opacity: showNextSection ? 1 : 0 }}
-            transition={{ delay: 0.2, duration: 0.4 }}
-            className="text-2xl md:text-4xl font-black tracking-widest uppercase"
-            style={{ fontFamily: "'Playfair Display', serif", marginTop: '16px', marginBottom: '24px' }}
-          >
-            More Coming Soon
-          </motion.h2>
-          <motion.button type="button"
-            onClick={goToPrev}
-            className="inline-flex items-center gap-2.5 rounded-full font-bold text-xs md:text-sm tracking-widest uppercase cursor-pointer shadow-lg hover:shadow-xl transition-all"
-            style={{
-              backgroundColor: '#7B4A1A', color: '#fdf6ec', paddingInline: '24px', paddingBlock: '12px'
-            }}
-            whileHover={{ scale: 1.05, y: -2 }}
-            whileTap={{ scale: 0.95 }}
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: showNextSection ? 0 : 20, opacity: showNextSection ? 1 : 0 }}
-            transition={{ delay: 0.3, duration: 0.4 }}
-          >
-            <ArrowUpIcon /> Back to Flavours
-          </motion.button>
-        </div>
+        <PromoSection
+          isActive={showNextSection}
+          onBackToHero={() => setShowNextSection(false)}
+        />
       </motion.div>
     </div>
   )
@@ -561,13 +591,6 @@ export default function App() {
 /* ─────────────────────────────────────────────
    ICONS (SVG inline)
 ───────────────────────────────────────────── */
-function ArrowUpIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-      <path d="M12 19V5M5 12l7-7 7 7" />
-    </svg>
-  )
-}
 
 function InstagramIcon() {
   return (
